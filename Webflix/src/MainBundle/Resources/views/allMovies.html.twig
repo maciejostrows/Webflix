@@ -1,0 +1,10 @@
+<html>
+<body>
+{% for movie in result %}
+    <a href="{{ path('main_default_movieshow', {'id':movie.id}) }}">{{ movie.title }}</a>  || {{ movie.rating }}<br>
+    {{ movie.description }}<hr>
+{{ movie.comments.text }}
+
+{% endfor %}
+</body>
+</html>

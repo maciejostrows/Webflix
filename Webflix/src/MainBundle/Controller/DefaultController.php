@@ -11,8 +11,24 @@ class DefaultController extends Controller
     /**
      * @Route("/")
      */
-    public function indexAction()
+    public function allMoviesAction()
     {
-        return new Response("ok");
+        $em = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository("MainBundle:Movies");
+        $result = $repository->findAll();
+
+        return $this->render("MainBundle::allMovies.html.twig", ['result'=>$result]);
+    }
+
+    /**
+     * @Route("/movie_show/{id}")
+     */
+
+    public function movieShowAction($id){
+        $em = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository("MainBundle:Movies");
+        $result = $repository->findOneById($id);
+
+        return $this->render("MainBundle::movie_show.html.twig", ['id'=>$id, 'result'=>$result]);
     }
 }
