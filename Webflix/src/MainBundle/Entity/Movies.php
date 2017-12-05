@@ -184,7 +184,7 @@ class Movies
     }
 
     /**
-     * @ORM\OneToMany(targetEntity="Comments", mappedBy="Movies")
+     * @ORM\OneToMany(targetEntity="Comments", mappedBy="movies")
      */
 
     private $comments;
@@ -225,5 +225,10 @@ class Movies
     public function getComments()
     {
         return $this->comments;
+    }
+
+    public function __toString()
+    {
+        return $this->getId();
     }
 }

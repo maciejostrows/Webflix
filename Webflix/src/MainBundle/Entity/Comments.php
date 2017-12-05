@@ -124,4 +124,9 @@ class Comments
     {
         return $this->movies;
     }
+
+    public function __toString()
+    {
+        return $this->setMovies();
+    }
 }

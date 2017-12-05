@@ -4,7 +4,17 @@
 Ocena: {{ result.rating }}<br>
 Opis:<br>
 {{ result.description }}<hr>
-    {{ result.path|raw }}
+    {{ result.path|raw }}<br>
+
+<h2>Komentarze: </h2><br>
+
+{{ form(form) }}
+
+
+{% for comment in result.comments %}
+    <h3>Autor: {{ comment.author }}</h3><br>
+{{ comment.text }}<hr>
+{% endfor %}
 
 </body>
 </html>
