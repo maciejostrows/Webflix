@@ -102,7 +102,16 @@ class DefaultController extends Controller
 
         $favourites = $user->getMovies($movie);
 
-        return $this->render("MainBundle::index.html.twig", ['favourites'=>$favourites]);
+        //Wyswietlenie 3 najnowszych filmow
+
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->createQuery('SELECT movies FROM MainBundle:Movies movies ORDER BY movies.id DESC');
+        $newMovies = $query->setMaxResults(3)->getResult();
+
+
+        return $this->render("MainBundle::index.html.twig",
+            ['favourites'=>$favourites,
+                'newMovies'=>$newMovies]);
 
 
     }
