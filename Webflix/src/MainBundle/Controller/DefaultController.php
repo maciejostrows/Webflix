@@ -5,9 +5,11 @@ namespace MainBundle\Controller;
 use MainBundle\Entity\Comments;
 use MainBundle\Entity\Favourites;
 use MainBundle\Entity\Movies;
+use MainBundle\Entity\Ratings;
 use MainBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
@@ -49,6 +51,24 @@ class DefaultController extends Controller
         $repository = $em->getRepository("MainBundle:Movies");
         $result = $repository->findOneById($id);
 
+        $query = $em->createQuery('SELECT ratings.rating FROM MainBundle:Ratings ratings WHERE ratings.movies = :id')->setParameter('id', $id);
+        $queryResult = $query->getResult();
+
+        $sum = 0;
+
+        foreach ($queryResult as $result1){
+            foreach ($result1 as $key=>$result2){
+
+                $sum +=$result2;
+
+            }
+
+        }
+
+        $rows = count($queryResult);
+        $average = $sum/$rows;
+
+
         $comments = new Comments();
 
 
@@ -69,7 +89,16 @@ class DefaultController extends Controller
         }
 
 
-        return $this->render("MainBundle::movie_show.html.twig", ['form' => $formComments->createView(), 'result' => $result,]);
+
+
+
+
+
+        return $this->render("MainBundle::movie_show.html.twig",
+            ['form' => $formComments->createView(),
+            'result' => $result,
+                'average'=>$average,
+                'rows'=>$rows]);
     }
 
     /**
@@ -109,11 +138,53 @@ class DefaultController extends Controller
      * @Route("/addRating/{id}")
      */
 
-    public function addRatingAction($id){
+    public function addRatingAction(Request $request, $id)
+    {
 
-        
+        $user = $this->getUser();
 
+        if ($user === null) {
+            return $this->redirectToRoute('fos_user_security_login');
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository("MainBundle:Movies");
+        $result = $repository->findOneById($id);
+
+
+        $ratings = new Ratings();
+
+        $formRatings = $this->createFormBuilder($ratings)
+            ->add('rating', ChoiceType::class, array(
+                'choices' => array(
+                    '1' => 1,
+                    '2' => 2,
+                    '3' => 3,
+                    '4' => 4,
+                    '5' => 5,
+                ),
+            ))
+            ->add('Wyślij', SubmitType::class)
+            ->getForm();
+
+        $formRatings->handleRequest($request);
+        if ($formRatings->isSubmitted()) {
+            $ratings = $formRatings->getData();
+            $ratings->setMovies($result);
+
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($ratings);
+            $em->flush();
+
+
+
+        }
+        return $this->render("MainBundle::rating.html.twig", ['formRatings'=>$formRatings->createView()]);
     }
+
+
+
 
     /**
      * @Route("/")

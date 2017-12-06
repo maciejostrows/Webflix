@@ -4,10 +4,12 @@
 {% include 'MainBundle::header.html.twig' %}
 
 <h1>{{ result.title }}</h1><br>
-Ocena: {{ result.rating }}<br>
+Ocena: {{ average|number_format(2) }} Ilość ocen: {{ rows }}<br>
 Opis:<br>
 {{ result.description }}<hr>
     {{ result.path|raw }}<br>
+
+<a href="{{ path('main_default_addrating', {id:result.id}) }}">Oceń film</a>
 
 <h2>Komentarze: </h2><br>
 
