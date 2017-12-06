@@ -3,6 +3,9 @@
 namespace MainBundle\Controller;
 
 use MainBundle\Entity\Comments;
+use MainBundle\Entity\Favourites;
+use MainBundle\Entity\Movies;
+use MainBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -13,7 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 class DefaultController extends Controller
 {
     /**
-     * @Route("/")
+     * @Route("/allMovies/")
      */
     public function allMoviesAction()
     {
@@ -34,15 +37,17 @@ class DefaultController extends Controller
         $result = $repository->findOneById($id);
 
         $comments = new Comments();
-        $form = $this->createFormBuilder($comments)
-            ->add('author', TextType::class)
+        $user = $this->getUser();
+
+        $formComments = $this->createFormBuilder($comments)
             ->add('text', TextType::class)
             ->add('Zapisz', SubmitType::class)
             ->getForm();
 
-        $form->handleRequest($request);
-        if($form->isSubmitted()){
-            $comments = $form->getData();
+        $formComments->handleRequest($request);
+        if($formComments->isSubmitted()){
+            $comments = $formComments->getData();
+            $comments->setAuthor($user);
             $comments->setMovies($result);
             $em = $this->getDoctrine()->getManager();
 
@@ -53,8 +58,51 @@ class DefaultController extends Controller
 
 
 
+        return $this->render("MainBundle::movie_show.html.twig", ['form'=>$formComments->createView(), 'result'=>$result,]);
+    }
 
-        return $this->render("MainBundle::movie_show.html.twig", ['form'=>$form->createView(), 'result'=>$result]);
+    /**
+     * @Route("/addToFavourites/{id}")
+     */
+
+    public function addToFavouritesAction($id){
+
+        //dodawanie filmu do ulubionych. trzeba pobrac usera, wybrac z bazy caly obiekt filmu,
+        //i uzyc funkcji addMovie podajac mu zmienna z obiektem filmu.
+
+        $user = $this->getUser();
+        $repository = $this->getDoctrine()->getRepository("MainBundle:Movies");
+
+        $movie = $repository->findOneById($id);
+        $user->addMovie($movie);
+
+
+
+        $em = $this->getDoctrine()->getManager();
+
+
+        $em->flush();
+
+        return new Response("Film dodano do ulubionych!");
+
+
+    }
+
+    /**
+     * @Route("/")
+     */
+
+    public function userPageAction(){
+        $user = $this->getUser();
+
+        $repository = $this->getDoctrine()->getRepository("MainBundle:Movies");
+        $movie = $repository->findAll();
+
+        $favourites = $user->getMovies($movie);
+
+        return $this->render("MainBundle::index.html.twig", ['favourites'=>$favourites]);
+
+
     }
 
 

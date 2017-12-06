@@ -34,38 +34,4 @@ class User extends BaseUser
     private $movies;
 
 
-
-    /**
-     * Add movie
-     *
-     * @param \MainBundle\Entity\Movies $movie
-     *
-     * @return User
-     */
-    public function addMovie(\MainBundle\Entity\Movies $movie)
-    {
-        $this->movies[] = $movie;
-
-        return $this;
-    }
-
-    /**
-     * Remove movie
-     *
-     * @param \MainBundle\Entity\Movies $movie
-     */
-    public function removeMovie(\MainBundle\Entity\Movies $movie)
-    {
-        $this->movies->removeElement($movie);
-    }
-
-    /**
-     * Get movies
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getMovies()
-    {
-        return $this->movies;
-    }
 }

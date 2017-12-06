@@ -191,6 +191,7 @@ class Movies
 
     public function __construct() {
         $this->features = new ArrayCollection();
+        $this->users = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -230,5 +231,47 @@ class Movies
     public function __toString()
     {
         return $this->getId();
+    }
+
+    /**
+     * @ORM\ManyToMany(targetEntity="User", mappedBy="movies")
+     */
+
+    private $users;
+
+
+
+    /**
+     * Add user
+     *
+     * @param \MainBundle\Entity\User $user
+     *
+     * @return Movies
+     */
+    public function addUser(\MainBundle\Entity\User $user)
+    {
+        $this->users[] = $user;
+
+        return $this;
+    }
+
+    /**
+     * Remove user
+     *
+     * @param \MainBundle\Entity\User $user
+     */
+    public function removeUser(\MainBundle\Entity\User $user)
+    {
+        $this->users->removeElement($user);
+    }
+
+    /**
+     * Get users
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getUsers()
+    {
+        return $this->users;
     }
 }

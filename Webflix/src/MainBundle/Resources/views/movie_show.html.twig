@@ -10,6 +10,11 @@ Opis:<br>
 
 {{ form(form) }}
 
+<a href="{{ path('main_default_addtofavourites', {'id':result.id}) }}">Dodaj do ulubionych</a>
+
+
+
+
 
 {% for comment in result.comments %}
     <h3>Autor: {{ comment.author }}</h3><br>
