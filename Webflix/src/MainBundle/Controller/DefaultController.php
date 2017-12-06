@@ -20,24 +20,37 @@ class DefaultController extends Controller
      */
     public function allMoviesAction()
     {
+        $user = $this->getUser();
+
+        if($user === null){
+            return $this->redirectToRoute('fos_user_security_login');
+        }
+
         $em = $this->getDoctrine()->getManager();
         $repository = $em->getRepository("MainBundle:Movies");
         $result = $repository->findAll();
 
-        return $this->render("MainBundle::allMovies.html.twig", ['result'=>$result]);
+        return $this->render("MainBundle::allMovies.html.twig", ['result' => $result]);
     }
 
     /**
      * @Route("/movie_show/{id}")
      */
 
-    public function movieShowAction(Request $request, $id){
+    public function movieShowAction(Request $request, $id)
+    {
+        $user = $this->getUser();
+
+        if($user === null){
+            return $this->redirectToRoute('fos_user_security_login');
+        }
+
         $em = $this->getDoctrine()->getManager();
         $repository = $em->getRepository("MainBundle:Movies");
         $result = $repository->findOneById($id);
 
         $comments = new Comments();
-        $user = $this->getUser();
+
 
         $formComments = $this->createFormBuilder($comments)
             ->add('text', TextType::class)
@@ -45,7 +58,7 @@ class DefaultController extends Controller
             ->getForm();
 
         $formComments->handleRequest($request);
-        if($formComments->isSubmitted()){
+        if ($formComments->isSubmitted()) {
             $comments = $formComments->getData();
             $comments->setAuthor($user);
             $comments->setMovies($result);
@@ -56,26 +69,30 @@ class DefaultController extends Controller
         }
 
 
-
-
-        return $this->render("MainBundle::movie_show.html.twig", ['form'=>$formComments->createView(), 'result'=>$result,]);
+        return $this->render("MainBundle::movie_show.html.twig", ['form' => $formComments->createView(), 'result' => $result,]);
     }
 
     /**
      * @Route("/addToFavourites/{id}")
      */
 
-    public function addToFavouritesAction($id){
+    public function addToFavouritesAction($id)
+    {
 
         //dodawanie filmu do ulubionych. trzeba pobrac usera, wybrac z bazy caly obiekt filmu,
         //i uzyc funkcji addMovie podajac mu zmienna z obiektem filmu.
 
         $user = $this->getUser();
+
+        if($user === null){
+            return $this->redirectToRoute('fos_user_security_login');
+        }
+
+
         $repository = $this->getDoctrine()->getRepository("MainBundle:Movies");
 
         $movie = $repository->findOneById($id);
         $user->addMovie($movie);
-
 
 
         $em = $this->getDoctrine()->getManager();
@@ -89,13 +106,30 @@ class DefaultController extends Controller
     }
 
     /**
+     * @Route("/addRating/{id}")
+     */
+
+    public function addRatingAction($id){
+
+        
+
+    }
+
+    /**
      * @Route("/")
      */
 
-    public function userPageAction(){
+    public function userPageAction()
+    {
         //Wybieranie ulubionych filmow, wybranie encji Movies, na user uzycie funkcji getMovies
         //podajac obiekt movie jako atrybut.
+
         $user = $this->getUser();
+
+        if($user === null){
+            return $this->redirectToRoute('fos_user_security_login');
+        }
+
 
         $repository = $this->getDoctrine()->getRepository("MainBundle:Movies");
         $movie = $repository->findAll();
@@ -110,14 +144,49 @@ class DefaultController extends Controller
 
 
         return $this->render("MainBundle::index.html.twig",
-            ['favourites'=>$favourites,
-                'newMovies'=>$newMovies]);
+            ['favourites' => $favourites,
+                'newMovies' => $newMovies]);
 
 
     }
 
+    /**
+     * @Route("/search/")
+     */
+
+    public function searchAction(Request $request)
+    {
+
+        $user = $this->getUser();
+
+        if($user === null){
+            return $this->redirectToRoute('fos_user_security_login');
+        }
+
+        $formSearch = $this->createFormBuilder()
+            ->add('text', TextType::class)
+            ->add('Szukaj', SubmitType::class)
+            ->getForm();
+
+        $result = "";
+
+        $formSearch->handleRequest($request);
+        if ($formSearch->isSubmitted()) {
+            $searchWord = $formSearch->getData();
+
+
+            $em = $this->getDoctrine()->getManager();
+            $query = $em->createQuery('SELECT movies FROM MainBundle:Movies movies WHERE movies.title LIKE :searchWord');
+            $result = $query->execute(['searchWord' => '%' . $searchWord['text'] . '%']);
+
+
+        }
+
+
+        return $this->render("MainBundle::search.html.twig", ['result' => $result, 'form' => $formSearch->createView()]);
 
 
 
     }
+}
 

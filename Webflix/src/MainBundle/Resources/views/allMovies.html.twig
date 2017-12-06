@@ -1,5 +1,8 @@
 <html>
 <body>
+
+{% include 'MainBundle::header.html.twig' %}
+
 {% for movie in result %}
     <a href="{{ path('main_default_movieshow', {'id':movie.id}) }}">{{ movie.title }}</a>  || {{ movie.rating }}<br>
     {{ movie.description }}<hr>

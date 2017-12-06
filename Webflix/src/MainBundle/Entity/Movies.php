@@ -192,6 +192,7 @@ class Movies
     public function __construct() {
         $this->features = new ArrayCollection();
         $this->users = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->ratings = new ArrayCollection();
     }
 
     /**
@@ -273,5 +274,47 @@ class Movies
     public function getUsers()
     {
         return $this->users;
+    }
+
+    /**
+     * @ORM\OneToMany(targetEntity="Ratings", mappedBy="product")
+     */
+
+    private $ratings;
+
+
+
+    /**
+     * Add rating
+     *
+     * @param \MainBundle\Entity\Ratings $rating
+     *
+     * @return Movies
+     */
+    public function addRating(\MainBundle\Entity\Ratings $rating)
+    {
+        $this->ratings[] = $rating;
+
+        return $this;
+    }
+
+    /**
+     * Remove rating
+     *
+     * @param \MainBundle\Entity\Ratings $rating
+     */
+    public function removeRating(\MainBundle\Entity\Ratings $rating)
+    {
+        $this->ratings->removeElement($rating);
+    }
+
+    /**
+     * Get ratings
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getRatings()
+    {
+        return $this->ratings;
     }
 }
