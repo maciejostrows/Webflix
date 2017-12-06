@@ -93,6 +93,8 @@ class DefaultController extends Controller
      */
 
     public function userPageAction(){
+        //Wybieranie ulubionych filmow, wybranie encji Movies, na user uzycie funkcji getMovies
+        //podajac obiekt movie jako atrybut.
         $user = $this->getUser();
 
         $repository = $this->getDoctrine()->getRepository("MainBundle:Movies");

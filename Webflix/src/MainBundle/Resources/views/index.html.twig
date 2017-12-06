@@ -1,7 +1,7 @@
 <html>
 <body>
 {% for movie in favourites %}
-    {{ movie.title }}
+   <a href="{{ path('main_default_movieshow', {id:movie.id}) }}">{{ movie.title }}</a> 
 {% endfor %}
 </body>
 </html>
