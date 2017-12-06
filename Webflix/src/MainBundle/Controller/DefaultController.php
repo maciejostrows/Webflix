@@ -28,6 +28,8 @@ class DefaultController extends Controller
             return $this->redirectToRoute('fos_user_security_login');
         }
 
+        //wyswietlanie wszystkich filmow
+
         $em = $this->getDoctrine()->getManager();
         $repository = $em->getRepository("MainBundle:Movies");
         $result = $repository->findAll();
@@ -47,6 +49,10 @@ class DefaultController extends Controller
             return $this->redirectToRoute('fos_user_security_login');
         }
 
+
+
+        //pobieranie ocen z bazy
+
         $em = $this->getDoctrine()->getManager();
         $repository = $em->getRepository("MainBundle:Movies");
         $result = $repository->findOneById($id);
@@ -54,7 +60,10 @@ class DefaultController extends Controller
         $query = $em->createQuery('SELECT ratings.rating FROM MainBundle:Ratings ratings WHERE ratings.movies = :id')->setParameter('id', $id);
         $queryResult = $query->getResult();
 
+        //wyciaganie ocen z tablicy tablic i obliczanie sredniej
+
         $sum = 0;
+        $average = 0;
 
         foreach ($queryResult as $result1){
             foreach ($result1 as $key=>$result2){
@@ -66,8 +75,11 @@ class DefaultController extends Controller
         }
 
         $rows = count($queryResult);
+        if($average>0){
         $average = $sum/$rows;
+        }
 
+        //dodawanie komentarzy
 
         $comments = new Comments();
 
@@ -82,16 +94,12 @@ class DefaultController extends Controller
             $comments = $formComments->getData();
             $comments->setAuthor($user);
             $comments->setMovies($result);
+            $comments->setBadComment(0);
             $em = $this->getDoctrine()->getManager();
 
             $em->persist($comments);
             $em->flush();
         }
-
-
-
-
-
 
 
         return $this->render("MainBundle::movie_show.html.twig",
@@ -105,7 +113,7 @@ class DefaultController extends Controller
      * @Route("/addToFavourites/{id}")
      */
 
-    public function addToFavouritesAction($id)
+    public function addToFavouritesAction(Request $request, $id)
     {
 
         //dodawanie filmu do ulubionych. trzeba pobrac usera, wybrac z bazy caly obiekt filmu,
@@ -116,6 +124,8 @@ class DefaultController extends Controller
         if($user === null){
             return $this->redirectToRoute('fos_user_security_login');
         }
+
+        $referer = $request->headers->get('referer');
 
 
         $repository = $this->getDoctrine()->getRepository("MainBundle:Movies");
@@ -129,7 +139,7 @@ class DefaultController extends Controller
 
         $em->flush();
 
-        return new Response("Film dodano do ulubionych!");
+        return $this->render("MainBundle::addedToFavourites.html.twig", ['referer'=>$referer]);
 
 
     }
@@ -146,6 +156,8 @@ class DefaultController extends Controller
         if ($user === null) {
             return $this->redirectToRoute('fos_user_security_login');
         }
+
+        //budowanie formularza z lista do wyboru
 
         $em = $this->getDoctrine()->getManager();
         $repository = $em->getRepository("MainBundle:Movies");
@@ -234,6 +246,8 @@ class DefaultController extends Controller
             return $this->redirectToRoute('fos_user_security_login');
         }
 
+        //budowanie formularza do szukania
+
         $formSearch = $this->createFormBuilder()
             ->add('text', TextType::class)
             ->add('Szukaj', SubmitType::class)
@@ -245,18 +259,45 @@ class DefaultController extends Controller
         if ($formSearch->isSubmitted()) {
             $searchWord = $formSearch->getData();
 
+            //dql do pobierania wynikow
 
             $em = $this->getDoctrine()->getManager();
             $query = $em->createQuery('SELECT movies FROM MainBundle:Movies movies WHERE movies.title LIKE :searchWord');
             $result = $query->execute(['searchWord' => '%' . $searchWord['text'] . '%']);
 
-
         }
-
 
         return $this->render("MainBundle::search.html.twig", ['result' => $result, 'form' => $formSearch->createView()]);
 
+    }
 
+    /**
+     * @Route("/addBadComment/{id}")
+     */
+
+    public function addBadCommentAction(Request $request, $id){
+
+        $user = $this->getUser();
+
+        if($user === null){
+            return $this->redirectToRoute('fos_user_security_login');
+        }
+
+        $referer = $request->headers->get('referer');
+
+
+        $em = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository("MainBundle:Comments");
+        $result = $repository->findOneById($id);
+
+        $result->setBadComment(1);
+
+        $em->persist($result);
+        $em->flush();
+
+
+
+        return $this->render("MainBundle::addedBadComment.html.twig", ['referer'=>$referer]);
 
     }
 }

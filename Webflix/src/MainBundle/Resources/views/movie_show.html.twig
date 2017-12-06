@@ -22,7 +22,7 @@ Opis:<br>
 
 
 {% for comment in result.comments %}
-    <h3>Autor: {{ comment.author }}</h3><br>
+    <h3>Autor: {{ comment.author }}</h3>   <a href="{{ path('main_default_addbadcomment', {'id':comment.id}) }}">Zgłoś komentarz</a><br>
 {{ comment.text }}<hr>
 {% endfor %}
 

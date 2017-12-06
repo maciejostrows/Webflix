@@ -35,6 +35,29 @@ class Comments
      */
     private $text;
 
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="badComment", type="integer")
+     */
+    private $badComment;
+
+    /**
+     * @return int
+     */
+    public function getBadComment()
+    {
+        return $this->badComment;
+    }
+
+    /**
+     * @param int $badComment
+     */
+    public function setBadComment($badComment)
+    {
+        $this->badComment = $badComment;
+    }
+
 
     /**
      * Get id
