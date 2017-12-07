@@ -633,13 +633,6 @@ class DefaultController extends Controller
         return $this->render("MainBundle::adminDeleteBan.html.twig", ['referer'=>$referer]);
     }
 
-    public function userNameAction(){
-        $user = $this->getUser();
-
-        return $this->render("MainBundle::header.html.twig", ['user'=>$user]);
-    }
-
-
 
 }
 

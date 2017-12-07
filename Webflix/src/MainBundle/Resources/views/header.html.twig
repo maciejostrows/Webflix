@@ -1,11 +1,16 @@
 <center><h1>WEBFLIX</h1>
 
 
-    <a href="{{ path('main_default_userpage') }}">Strona Główna</a>
-    <a href="{{ path('main_default_allmovies') }}">Wszystkie filmy</a>
-    <a href="{{ path('main_default_search') }}">Szukaj</a>
-    <a href="{{ path('main_default_searchbygenre') }}">Szukaj po gatunkach</a>
-    <a href="{{ path('fos_user_security_logout') }}">Wyloguj się</a>
+    <a href="{{ path('main_default_userpage') }}">Strona Główna</a> ||
+    <a href="{{ path('main_default_allmovies') }}">Wszystkie filmy</a> ||
+    <a href="{{ path('main_default_search') }}">Szukaj</a> ||
+    <a href="{{ path('main_default_searchbygenre') }}">Szukaj po gatunkach</a> ||
+    <a href="{{ path('fos_user_security_logout') }}">Wyloguj się</a> ||
+    Jesteś zalogowany jako: {{ app.user.username }}
+    {% if is_granted('ROLE_ADMIN') %}
+        <a href="{{ path('main_default_adminpanel') }}">Panel Administratora</a>
+
+    {% endif %}
 
 
 
