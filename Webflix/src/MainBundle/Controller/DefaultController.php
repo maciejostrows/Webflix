@@ -633,5 +633,8 @@ class DefaultController extends Controller
 
         return $this->render("MainBundle::adminDeleteBan.html.twig", ['referer'=>$referer]);
     }
+    
+
+
 }
 
