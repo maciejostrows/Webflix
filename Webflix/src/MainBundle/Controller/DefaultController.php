@@ -29,6 +29,11 @@ class DefaultController extends Controller
             return $this->redirectToRoute('fos_user_security_login');
         }
 
+        $ban = $user->getBan();
+        if($ban === 1){
+            return $this->render("MainBundle::ban.html.twig");
+        }
+
         //wyswietlanie wszystkich filmow
 
         $em = $this->getDoctrine()->getManager();
@@ -48,6 +53,11 @@ class DefaultController extends Controller
 
         if($user === null){
             return $this->redirectToRoute('fos_user_security_login');
+        }
+
+        $ban = $user->getBan();
+        if($ban === 1){
+            return $this->render("MainBundle::ban.html.twig");
         }
 
 
@@ -126,6 +136,11 @@ class DefaultController extends Controller
             return $this->redirectToRoute('fos_user_security_login');
         }
 
+        $ban = $user->getBan();
+        if($ban === 1){
+            return $this->render("MainBundle::ban.html.twig");
+        }
+
         $referer = $request->headers->get('referer');
 
 
@@ -156,6 +171,11 @@ class DefaultController extends Controller
 
         if ($user === null) {
             return $this->redirectToRoute('fos_user_security_login');
+        }
+
+        $ban = $user->getBan();
+        if($ban === 1){
+            return $this->render("MainBundle::ban.html.twig");
         }
 
         $referer = $request->headers->get('referer');
@@ -212,8 +232,15 @@ class DefaultController extends Controller
 
         $user = $this->getUser();
 
+
+
         if($user === null){
             return $this->redirectToRoute('fos_user_security_login');
+        }
+
+        $ban = $user->getBan();
+        if($ban === 1){
+            return $this->render("MainBundle::ban.html.twig");
         }
 
 
@@ -247,6 +274,11 @@ class DefaultController extends Controller
 
         if($user === null){
             return $this->redirectToRoute('fos_user_security_login');
+        }
+
+        $ban = $user->getBan();
+        if($ban === 1){
+            return $this->render("MainBundle::ban.html.twig");
         }
 
         //budowanie formularza do szukania
@@ -286,6 +318,11 @@ class DefaultController extends Controller
             return $this->redirectToRoute('fos_user_security_login');
         }
 
+        $ban = $user->getBan();
+        if($ban === 1){
+            return $this->render("MainBundle::ban.html.twig");
+        }
+
         $referer = $request->headers->get('referer');
 
 
@@ -314,6 +351,11 @@ class DefaultController extends Controller
 
         if($user === null){
             return $this->redirectToRoute('fos_user_security_login');
+        }
+
+        $ban = $user->getBan();
+        if($ban === 1){
+            return $this->render("MainBundle::ban.html.twig");
         }
 
         //Wyszukiwanie po gatunku
@@ -360,6 +402,11 @@ class DefaultController extends Controller
         if($user === null){
             return $this->redirectToRoute('fos_user_security_login');
         }
+
+        $ban = $user->getBan();
+        if($ban === 1){
+            return $this->render("MainBundle::ban.html.twig");
+        }
         //komenda do sprawdzenia uprawnien. dokladnie taka ma byc
         $this->denyAccessUnlessGranted('ROLE_ADMIN', null, '...');
 
@@ -377,6 +424,11 @@ class DefaultController extends Controller
         $user = $this->getUser();
         if($user === null){
             return $this->redirectToRoute('fos_user_security_login');
+        }
+
+        $ban = $user->getBan();
+        if($ban === 1){
+            return $this->render("MainBundle::ban.html.twig");
         }
         //komenda do sprawdzenia uprawnien. dokladnie taka ma byc
         $this->denyAccessUnlessGranted('ROLE_ADMIN', null, '...');
@@ -400,6 +452,11 @@ class DefaultController extends Controller
         $user = $this->getUser();
         if($user === null){
             return $this->redirectToRoute('fos_user_security_login');
+        }
+
+        $ban = $user->getBan();
+        if($ban === 1){
+            return $this->render("MainBundle::ban.html.twig");
         }
         //komenda do sprawdzenia uprawnien. dokladnie taka ma byc
         $this->denyAccessUnlessGranted('ROLE_ADMIN', null, '...');
@@ -432,6 +489,11 @@ class DefaultController extends Controller
         if($user === null){
             return $this->redirectToRoute('fos_user_security_login');
         }
+
+        $ban = $user->getBan();
+        if($ban === 1){
+            return $this->render("MainBundle::ban.html.twig");
+        }
         //komenda do sprawdzenia uprawnien. dokladnie taka ma byc
         $this->denyAccessUnlessGranted('ROLE_ADMIN', null, '...');
         //komenda do referera - linku wracajacego do poprzedniej strony. pamietac o
@@ -461,6 +523,11 @@ class DefaultController extends Controller
         if($user === null){
             return $this->redirectToRoute('fos_user_security_login');
         }
+
+        $ban = $user->getBan();
+        if($ban === 1){
+            return $this->render("MainBundle::ban.html.twig");
+        }
         //komenda do sprawdzenia uprawnien. dokladnie taka ma byc
         $this->denyAccessUnlessGranted('ROLE_ADMIN', null, '...');
         //komenda do referera - linku wracajacego do poprzedniej strony. pamietac o
@@ -475,7 +542,7 @@ class DefaultController extends Controller
 
         //Wybieranie usera z komentarza
         $userBan = $result->getAuthor();
-        dump($userBan);
+
 
         //Wybieranie usera z bazy danych
 
@@ -491,6 +558,80 @@ class DefaultController extends Controller
 
         return $this->render("MainBundle::adminCommentDeletedAndBan.html.twig", ['referer'=>$referer]);
 
+    }
+
+    /**
+     * @Route("/admin/searchuser/")
+     * @Security("has_role('ROLE_USER')")
+     */
+
+    public function adminSearchUserAction(Request $request){
+        //php bin/console fos:user:promote nazwa_usera ROLE_ADMIN - komenda do nadania uprawnien
+        $user = $this->getUser();
+        if($user === null){
+            return $this->redirectToRoute('fos_user_security_login');
+        }
+
+        $ban = $user->getBan();
+        if($ban === 1){
+            return $this->render("MainBundle::ban.html.twig");
+        }
+        //komenda do sprawdzenia uprawnien. dokladnie taka ma byc
+        $this->denyAccessUnlessGranted('ROLE_ADMIN', null, '...');
+        //komenda do referera - linku wracajacego do poprzedniej strony. pamietac o
+        //przekazaniu do rendera.
+        $referer = $request->headers->get('referer');
+
+        //budowanie formularza do szukania
+
+        $formSearchUser = $this->createFormBuilder()
+            ->add('text', TextType::class)
+            ->add('Szukaj', SubmitType::class)
+            ->getForm();
+
+        $userBan = "";
+        $formSearchUser->handleRequest($request);
+        if($formSearchUser->isSubmitted()){
+            $result = $formSearchUser->getData();
+            $em = $this->getDoctrine()->getManager();
+            $repository = $em->getRepository("MainBundle:User");
+            $userBan = $repository->findByUsername($result);
+
+        }
+
+        return $this->render("MainBundle::adminSearchUser.html.twig", ['formSearchUser'=>$formSearchUser->createView(), 'userBan'=>$userBan, 'referer'=>$referer]);
+    }
+
+    /**
+     * @Route("/admin/deleteban/{name}")
+     * @Security("has_role('ROLE_USER')")
+     */
+
+    public function adminDeleteBanAction(Request $request, $name){
+        //php bin/console fos:user:promote nazwa_usera ROLE_ADMIN - komenda do nadania uprawnien
+        $user = $this->getUser();
+        if($user === null){
+            return $this->redirectToRoute('fos_user_security_login');
+        }
+
+        $ban = $user->getBan();
+        if($ban === 1){
+            return $this->render("MainBundle::ban.html.twig");
+        }
+        //komenda do sprawdzenia uprawnien. dokladnie taka ma byc
+        $this->denyAccessUnlessGranted('ROLE_ADMIN', null, '...');
+        //komenda do referera - linku wracajacego do poprzedniej strony. pamietac o
+        //przekazaniu do rendera.
+        $referer = $request->headers->get('referer');
+
+        $em = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository("MainBundle:User");
+        $searchUser = $repository->findOneByUsername($name);
+        $searchUser->setBan(0);
+        $em->persist($searchUser);
+        $em->flush();
+
+        return $this->render("MainBundle::adminDeleteBan.html.twig", ['referer'=>$referer]);
     }
 }
 

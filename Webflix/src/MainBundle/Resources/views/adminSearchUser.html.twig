@@ -1,0 +1,15 @@
+<html>
+<body>
+
+{% include 'MainBundle::header.html.twig' %}
+
+{{ form(formSearchUser) }}
+
+{% for user in userBan %}
+    {{ user.username }} || <a href="{{ path('main_default_admindeleteban', {name:user.username}) }}">Usuń bana</a><hr>
+{% endfor %}
+
+<a href="{{ path('main_default_adminpanel') }}">Powrót</a>
+
+</body>
+</html>
