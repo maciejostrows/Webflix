@@ -178,7 +178,6 @@ class DefaultController extends Controller
             return $this->render("MainBundle::ban.html.twig");
         }
 
-        $referer = $request->headers->get('referer');
 
         //budowanie formularza z lista do wyboru
 
@@ -215,7 +214,7 @@ class DefaultController extends Controller
 
 
         }
-        return $this->render("MainBundle::rating.html.twig", ['formRatings'=>$formRatings->createView(), 'referer'=>$referer]);
+        return $this->render("MainBundle::rating.html.twig", ['formRatings'=>$formRatings->createView(),'id'=>$id]);
     }
 
 
@@ -633,7 +632,13 @@ class DefaultController extends Controller
 
         return $this->render("MainBundle::adminDeleteBan.html.twig", ['referer'=>$referer]);
     }
-    
+
+    public function userNameAction(){
+        $user = $this->getUser();
+
+        return $this->render("MainBundle::header.html.twig", ['user'=>$user]);
+    }
+
 
 
 }
