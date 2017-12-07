@@ -418,6 +418,78 @@ class DefaultController extends Controller
 
         return $this->render("MainBundle::adminCommentOk.html.twig", ['referer'=>$referer]);
 
+    }
+
+    /**
+     * @Route("/admin/commentdelete/{id}")
+     * @Security("has_role('ROLE_USER')")
+     */
+
+    public function adminCommentsDelete(Request $request, $id){
+
+        //php bin/console fos:user:promote nazwa_usera ROLE_ADMIN - komenda do nadania uprawnien
+        $user = $this->getUser();
+        if($user === null){
+            return $this->redirectToRoute('fos_user_security_login');
+        }
+        //komenda do sprawdzenia uprawnien. dokladnie taka ma byc
+        $this->denyAccessUnlessGranted('ROLE_ADMIN', null, '...');
+        //komenda do referera - linku wracajacego do poprzedniej strony. pamietac o
+        //przekazaniu do rendera.
+        $referer = $request->headers->get('referer');
+
+        $em = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository("MainBundle:Comments");
+
+        $result = $repository->findOneById($id);
+
+        $em->remove($result);
+        $em->flush();
+
+        return $this->render("MainBundle::adminCommentDeleted.html.twig", ['referer'=>$referer]);
+    }
+
+    /**
+     * @Route("/admin/commentdeleteandban/{id}")
+     * @Security("has_role('ROLE_USER')")
+     */
+
+    public function adminCommentDeleteAndBanAction(Request $request, $id){
+
+        //php bin/console fos:user:promote nazwa_usera ROLE_ADMIN - komenda do nadania uprawnien
+        $user = $this->getUser();
+        if($user === null){
+            return $this->redirectToRoute('fos_user_security_login');
+        }
+        //komenda do sprawdzenia uprawnien. dokladnie taka ma byc
+        $this->denyAccessUnlessGranted('ROLE_ADMIN', null, '...');
+        //komenda do referera - linku wracajacego do poprzedniej strony. pamietac o
+        //przekazaniu do rendera.
+        $referer = $request->headers->get('referer');
+
+        //wybieranie komentarza z bazy danych
+        $em = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository("MainBundle:Comments");
+
+        $result = $repository->findOneById($id);
+
+        //Wybieranie usera z komentarza
+        $userBan = $result->getAuthor();
+        dump($userBan);
+
+        //Wybieranie usera z bazy danych
+
+        $repositoryUser = $em->getRepository("MainBundle:User");
+        $finalUser = $repositoryUser->findOneByUsername($userBan);
+
+        //Ustawianie bana i kasowanie komentarza
+        $em->remove($result);
+        $finalUser->setBan(1);
+        $em->persist($user);
+        $em->flush();
+
+
+        return $this->render("MainBundle::adminCommentDeletedAndBan.html.twig", ['referer'=>$referer]);
 
     }
 }

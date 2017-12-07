@@ -2,7 +2,10 @@
 <body>
 {% for comment in result %}
 {{ comment.author }} || {{ comment.text }} || Id komentarza {{ comment.id }}<br>
-    <a href="{{ path('main_default_admincommentsok', {id:comment.id}) }}">Komentarz ok</a>
+    <a href="{{ path('main_default_admincommentsok', {id:comment.id}) }}">Komentarz ok</a> ||
+    <a href="{{ path('main_default_admincommentsdelete', {id:comment.id}) }}">Usuń komentarz</a> ||
+    <a href="{{ path('main_default_admincommentdeleteandban', {id:comment.id}) }}">Usuń komentarz i zbanuj użytkownika</a> ||
+
     <hr>
 {% endfor %}
 </body>

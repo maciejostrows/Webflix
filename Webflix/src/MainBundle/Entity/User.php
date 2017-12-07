@@ -27,6 +27,29 @@ class User extends BaseUser
     }
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="ban", type="integer")
+     */
+    private $ban;
+
+    /**
+     * @return mixed
+     */
+    public function getBan()
+    {
+        return $this->ban;
+    }
+
+    /**
+     * @param mixed $ban
+     */
+    public function setBan($ban)
+    {
+        $this->ban = $ban;
+    }
+
+    /**
      * @ORM\ManyToMany(targetEntity="Movies", inversedBy="users")
      * @ORM\JoinTable(name="users_movies")
      */
