@@ -4,7 +4,7 @@
 {% include 'MainBundle::header.html.twig' %}
 
 {% for movie in result %}
-    <a href="{{ path('main_default_movieshow', {'id':movie.id}) }}">{{ movie.title }}</a>  || {{ movie.rating }}<br>
+    <a href="{{ path('main_default_movieshow', {'id':movie.id}) }}">{{ movie.title }}</a><br>
     {{ movie.description }}<hr>
 
 {% endfor %}

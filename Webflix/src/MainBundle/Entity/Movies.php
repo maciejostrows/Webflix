@@ -45,12 +45,15 @@ class Movies
 
 
 
+
+
     /**
-     * @var float
+     * @var string
      *
-     * @ORM\Column(name="rating", type="float")
+     * @ORM\Column(name="genre", type="string", length=50)
      */
-    private $rating;
+    private $genre;
+
 
 
     /**
@@ -159,29 +162,7 @@ class Movies
         return $this->genre;
     }
 
-    /**
-     * Set rating
-     *
-     * @param float $rating
-     *
-     * @return Movies
-     */
-    public function setRating($rating)
-    {
-        $this->rating = $rating;
 
-        return $this;
-    }
-
-    /**
-     * Get rating
-     *
-     * @return float
-     */
-    public function getRating()
-    {
-        return $this->rating;
-    }
 
     /**
      * @ORM\OneToMany(targetEntity="Comments", mappedBy="movies")

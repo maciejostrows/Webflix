@@ -14,6 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use	Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 class DefaultController extends Controller
 {
@@ -75,7 +76,7 @@ class DefaultController extends Controller
         }
 
         $rows = count($queryResult);
-        if($average>0){
+        if($rows>0){
         $average = $sum/$rows;
         }
 
@@ -157,6 +158,8 @@ class DefaultController extends Controller
             return $this->redirectToRoute('fos_user_security_login');
         }
 
+        $referer = $request->headers->get('referer');
+
         //budowanie formularza z lista do wyboru
 
         $em = $this->getDoctrine()->getManager();
@@ -192,7 +195,7 @@ class DefaultController extends Controller
 
 
         }
-        return $this->render("MainBundle::rating.html.twig", ['formRatings'=>$formRatings->createView()]);
+        return $this->render("MainBundle::rating.html.twig", ['formRatings'=>$formRatings->createView(), 'referer'=>$referer]);
     }
 
 
@@ -298,6 +301,123 @@ class DefaultController extends Controller
 
 
         return $this->render("MainBundle::addedBadComment.html.twig", ['referer'=>$referer]);
+
+    }
+
+    /**
+     * @Route("/searchByGenre/")
+     */
+
+    public function searchByGenreAction(Request $request){
+
+        $user = $this->getUser();
+
+        if($user === null){
+            return $this->redirectToRoute('fos_user_security_login');
+        }
+
+        //Wyszukiwanie po gatunku
+
+        $formSearchByGenre = $this->createFormBuilder()
+            ->add('Gatunek', ChoiceType::class, array(
+                'choices' => array(
+                    'Komedia' => 'comedy',
+                    'Akcja' => 'action',
+                    'Horror' => 'horror',
+
+                ),
+            ))
+            ->add('Wyślij', SubmitType::class)
+            ->getForm();
+
+        $result="";
+
+        $formSearchByGenre->handleRequest($request);
+
+        if($formSearchByGenre->isSubmitted()){
+            $searchGenre = $formSearchByGenre->getData();
+
+            $em = $this->getDoctrine()->getManager();
+//            $query = $em->createQuery('SELECT movies FROM MainBundle:Movies movies WHERE movies.genre LIKE :searchWord');
+//            $result = $query->execute(['searchWord' => $searchGenre['Gatunek']]);
+            $repository = $em->getRepository("MainBundle:Movies");
+            $result = $repository->findByGenre($searchGenre);
+
+
+        }
+        return $this->render("MainBundle::searchByGenre.html.twig", ['form'=>$formSearchByGenre->createView(), 'result'=>$result]);
+
+    }
+
+    /**
+     * @Route("/admin/")
+     * @Security("has_role('ROLE_USER')")
+     */
+
+    public function adminPanelAction(){
+        //php bin/console fos:user:promote nazwa_usera ROLE_ADMIN - komenda do nadania uprawnien
+        $user = $this->getUser();
+        if($user === null){
+            return $this->redirectToRoute('fos_user_security_login');
+        }
+        //komenda do sprawdzenia uprawnien. dokladnie taka ma byc
+        $this->denyAccessUnlessGranted('ROLE_ADMIN', null, '...');
+
+        return $this->render("MainBundle::adminPanel.html.twig");
+    }
+
+    /**
+     * @Route("/admin/comments/")
+     * @Security("has_role('ROLE_USER')")
+     */
+
+    public function adminCommentsAction(Request $request){
+
+        //php bin/console fos:user:promote nazwa_usera ROLE_ADMIN - komenda do nadania uprawnien
+        $user = $this->getUser();
+        if($user === null){
+            return $this->redirectToRoute('fos_user_security_login');
+        }
+        //komenda do sprawdzenia uprawnien. dokladnie taka ma byc
+        $this->denyAccessUnlessGranted('ROLE_ADMIN', null, '...');
+
+        $em = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository("MainBundle:Comments");
+
+        $result = $repository->findByBadComment(1);
+
+        return $this->render("MainBundle::adminComments.html.twig", ['result' => $result]);
+    }
+
+    /**
+     * @Route("/admin/commentok/{id}")
+     * @Security("has_role('ROLE_USER')")
+     */
+
+    public function adminCommentsOk(Request $request, $id){
+
+        //php bin/console fos:user:promote nazwa_usera ROLE_ADMIN - komenda do nadania uprawnien
+        $user = $this->getUser();
+        if($user === null){
+            return $this->redirectToRoute('fos_user_security_login');
+        }
+        //komenda do sprawdzenia uprawnien. dokladnie taka ma byc
+        $this->denyAccessUnlessGranted('ROLE_ADMIN', null, '...');
+
+        $referer = $request->headers->get('referer');
+
+        $em = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository("MainBundle:Comments");
+
+        $result = $repository->findOneById($id);
+
+        $result->setBadComment(0);
+
+        $em->persist($result);
+        $em->flush();
+
+        return $this->render("MainBundle::adminCommentOk.html.twig", ['referer'=>$referer]);
+
 
     }
 }

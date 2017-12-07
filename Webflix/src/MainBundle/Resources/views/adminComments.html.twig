@@ -1,0 +1,9 @@
+<html>
+<body>
+{% for comment in result %}
+{{ comment.author }} || {{ comment.text }} || Id komentarza {{ comment.id }}<br>
+    <a href="{{ path('main_default_admincommentsok', {id:comment.id}) }}">Komentarz ok</a>
+    <hr>
+{% endfor %}
+</body>
+</html>
