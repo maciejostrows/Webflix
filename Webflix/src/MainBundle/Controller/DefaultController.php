@@ -431,13 +431,14 @@ class DefaultController extends Controller
         }
         //komenda do sprawdzenia uprawnien. dokladnie taka ma byc
         $this->denyAccessUnlessGranted('ROLE_ADMIN', null, '...');
+        $referer = $request->headers->get('referer');
 
         $em = $this->getDoctrine()->getManager();
         $repository = $em->getRepository("MainBundle:Comments");
 
         $result = $repository->findByBadComment(1);
 
-        return $this->render("MainBundle::adminComments.html.twig", ['result' => $result]);
+        return $this->render("MainBundle::adminComments.html.twig", ['result' => $result, 'referer'=>$referer]);
     }
 
     /**
@@ -581,24 +582,14 @@ class DefaultController extends Controller
         //przekazaniu do rendera.
         $referer = $request->headers->get('referer');
 
-        //budowanie formularza do szukania
+        //Wybieranie z bazy wszystkich zbanowanych użytkowników
+        $em = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository("MainBundle:User");
+        $result = $repository->findByBan(1);
 
-        $formSearchUser = $this->createFormBuilder()
-            ->add('text', TextType::class)
-            ->add('Szukaj', SubmitType::class)
-            ->getForm();
+        return $this->render("MainBundle::adminSearchUser.html.twig", ['result'=>$result, 'referer'=>$referer]);
 
-        $userBan = "";
-        $formSearchUser->handleRequest($request);
-        if($formSearchUser->isSubmitted()){
-            $result = $formSearchUser->getData();
-            $em = $this->getDoctrine()->getManager();
-            $repository = $em->getRepository("MainBundle:User");
-            $userBan = $repository->findByUsername($result);
 
-        }
-
-        return $this->render("MainBundle::adminSearchUser.html.twig", ['formSearchUser'=>$formSearchUser->createView(), 'userBan'=>$userBan, 'referer'=>$referer]);
     }
 
     /**

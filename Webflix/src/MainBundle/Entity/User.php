@@ -21,6 +21,7 @@ class User extends BaseUser
 
     public function __construct()
     {
+        $this->setBan(0);
         parent::__construct();
         $this->groups = new \Doctrine\Common\Collections\ArrayCollection();
         // your own logic

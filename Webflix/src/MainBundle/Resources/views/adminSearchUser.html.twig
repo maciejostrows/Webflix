@@ -3,9 +3,7 @@
 
 {% include 'MainBundle::header.html.twig' %}
 
-{{ form(formSearchUser) }}
-
-{% for user in userBan %}
+{% for user in result %}
     {{ user.username }} || <a href="{{ path('main_default_admindeleteban', {name:user.username}) }}">Usuń bana</a><hr>
 {% endfor %}
 
