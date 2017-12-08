@@ -1,10 +1,10 @@
-<html>
-<body>
+{% extends '::base.html.twig' %}
+
+{% block body %}
 
 {% include 'MainBundle::header.html.twig' %}
 
 <h1>Komentarz pozostawiony</h1>
 
-<a href="{{ path('main_default_adminpanel') }}">Powrót</a>
-</body>
-</html>
+<a class="btn btn-primary" href="{{ path('main_default_adminpanel') }}">Powrót</a>
+{% endblock %}

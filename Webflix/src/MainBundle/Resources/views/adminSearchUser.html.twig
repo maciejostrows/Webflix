@@ -1,13 +1,13 @@
-<html>
-<body>
+{% extends '::base.html.twig' %}
+
+{% block body %}
 
 {% include 'MainBundle::header.html.twig' %}
 
 {% for user in result %}
-    {{ user.username }} || <a href="{{ path('main_default_admindeleteban', {name:user.username}) }}">Usuń bana</a><hr>
+    {{ user.username }} || <a class="btn btn-primary" href="{{ path('main_default_admindeleteban', {name:user.username}) }}">Usuń bana</a><hr>
 {% endfor %}
 
-<a href="{{ path('main_default_adminpanel') }}">Powrót</a>
+<a class="btn btn-primary" href="{{ path('main_default_adminpanel') }}">Powrót</a>
 
-</body>
-</html>
+{% endblock %}

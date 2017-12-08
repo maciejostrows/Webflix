@@ -1,6 +1,8 @@
-<html>
-<body>
+{% extends '::base.html.twig' %}
+
+{% block body %}
 <h1>Twoje konto zostało zbanowane!!!<br>Skontaktuj się z Administratorem i przeproś w celu dalszego
 korzystania z serwisu.</h1><hr>
-</body>
-</html>
+{% endblock %}
+
+<a class="btn btn-primary" href="{{ path('fos_user_security_logout') }}">Powrót</a>

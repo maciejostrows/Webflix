@@ -1,15 +1,15 @@
-<html>
-<body>
-{% include 'MainBundle::header.html.twig' %}
+{% extends '::base.html.twig' %}
 
-<h3>Twoje ulubione filmy:</h3><br>
-{% for movie in favourites %}
-   <a href="{{ path('main_default_movieshow', {id:movie.id}) }}">{{ movie.title }}</a><br>
-{% endfor %}<hr>
+{% block body %}
+    {% include 'MainBundle::header.html.twig' %}
 
-<h3>Najnowsze filmy</h3>
-{% for newMovie in newMovies %}
-    <a href="{{ path('main_default_movieshow', {id:newMovie.id}) }}">{{ newMovie.title }}</a> <br>
-{% endfor %}<hr>
-</body>
-</html>
+    <h3>Twoje ulubione filmy:</h3><br>
+    {% for movie in favourites %}
+        <a href="{{ path('main_default_movieshow', {id:movie.id}) }}">{{ movie.title }}</a><br>
+    {% endfor %}<hr>
+
+    <h3>Najnowsze filmy</h3>
+    {% for newMovie in newMovies %}
+        <a href="{{ path('main_default_movieshow', {id:newMovie.id}) }}">{{ newMovie.title }}</a> <br>
+    {% endfor %}<hr>
+{% endblock %}

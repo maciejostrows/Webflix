@@ -1,13 +1,13 @@
-<html>
-<body>
+{% extends '::base.html.twig' %}
+
+{% block body %}
 
 {% include 'MainBundle::header.html.twig' %}
 
-<a href="{{ path('main_default_admincomments') }}">Zgłoszone komentarze</a><br>
-<a href="{{ path('main_default_adminsearchuser') }}">Usuń bana użytkownikowi</a><br>
-<a href="{{ path('movies_new') }}">Dodaj film do serwisu</a><br>
+<a class="btn btn-primary" href="{{ path('main_default_admincomments') }}">Zgłoszone komentarze</a><br><br>
+<a class="btn btn-primary" href="{{ path('main_default_adminsearchuser') }}">Usuń bana użytkownikowi</a><br><br>
+<a class="btn btn-primary" href="{{ path('movies_new') }}">Dodaj film do serwisu</a><br><br>
 
 
 
-</body>
-</html>
+{% endblock %}

@@ -1,12 +1,12 @@
-<html>
-<body>
+{% extends '::base.html.twig' %}
+
+{% block body %}
 
 {% include 'MainBundle::header.html.twig' %}
 
 {{ form(form) }}
 
 {% for movie in result %}
-   <a href="{{ path('main_default_movieshow', {id:movie.id}) }}">{{ movie.title }}</a>
+   <a class="btn btn-primary" href="{{ path('main_default_movieshow', {id:movie.id}) }}">{{ movie.title }}</a>
 {% endfor %}
-</body>
-</html>
+{% endblock %}

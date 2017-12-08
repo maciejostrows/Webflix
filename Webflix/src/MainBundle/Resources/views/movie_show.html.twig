@@ -1,21 +1,22 @@
-<html>
-<body>
 
+{% extends '::base.html.twig' %}
+
+{% block body %}
 {% include 'MainBundle::header.html.twig' %}
 
 <h1>{{ result.title }}</h1><br>
-Ocena: {{ average|number_format(2) }} Ilość ocen: {{ rows }}<br>
-Opis:<br>
-{{ result.description }}<hr>
-    {{ result.path|raw }}<br>
+Ocena: {{ average|number_format(2) }} Ilość ocen: {{ rows }} || <a class="btn btn-primary" href="{{ path('main_default_addrating', {id:result.id}) }}">Oceń film</a> || <a class="btn btn-success" href="{{ path('main_default_addtofavourites', {'id':result.id}) }}">Dodaj do ulubionych</a><br>
 
-<a href="{{ path('main_default_addrating', {id:result.id}) }}">Oceń film</a>
+    Opis:<br>
+{{ result.description }}<hr>
+    <center>{{ result.path|raw }}</center><br>
+
 
 <h2>Komentarze: </h2><br>
 
 {{ form(form) }}
 
-<a href="{{ path('main_default_addtofavourites', {'id':result.id}) }}">Dodaj do ulubionych</a>
+
 
 
 
@@ -25,6 +26,4 @@ Opis:<br>
     <h3>Autor: {{ comment.author }}</h3>   <a href="{{ path('main_default_addbadcomment', {'id':comment.id}) }}">Zgłoś komentarz</a><br>
 {{ comment.text }}<hr>
 {% endfor %}
-
-</body>
-</html>
+{% endblock %}
