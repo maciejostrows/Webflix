@@ -43,7 +43,12 @@ class MoviesController extends Controller
         $form = $this->createForm('MainBundle\Form\MoviesType', $movie);
         $form->handleRequest($request);
 
+
+
         if ($form->isSubmitted() && $form->isValid()) {
+            $movie->getPath();
+            $stringPath = substr($movie,68,11);
+            $movie->setThumbnail($stringPath);
             $em = $this->getDoctrine()->getManager();
             $em->persist($movie);
             $em->flush();

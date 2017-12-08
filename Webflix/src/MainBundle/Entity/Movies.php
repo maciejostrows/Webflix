@@ -54,6 +54,29 @@ class Movies
      */
     private $genre;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="thumbnail", type="string", length=50)
+     */
+    private $thumbnail;
+
+    /**
+     * @return string
+     */
+    public function getThumbnail()
+    {
+        return $this->thumbnail;
+    }
+
+    /**
+     * @param string $thumbnail
+     */
+    public function setThumbnail($thumbnail)
+    {
+        $this->thumbnail = $thumbnail;
+    }
+
 
 
     /**
@@ -212,7 +235,7 @@ class Movies
 
     public function __toString()
     {
-        return $this->getId();
+        return $this->getPath();
     }
 
     /**

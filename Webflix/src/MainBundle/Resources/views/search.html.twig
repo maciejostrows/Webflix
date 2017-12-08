@@ -7,6 +7,11 @@
 {{ form(form) }}
 
 {% for movie in result %}
-   <a class="btn btn-primary" href="{{ path('main_default_movieshow', {id:movie.id}) }}">{{ movie.title }}</a>
-{% endfor %}
+   <div style = "float:left"><a href="{{ path('main_default_movieshow', {id:movie.id}) }}">
+         <img src="https://img.youtube.com/vi/{{ movie.thumbnail }}/mqdefault.jpg"><br>
+         <h2>{{ movie.title }}</h2></a><br></div>
+{% endfor %}<div style = "clear:both"></div><hr>
 {% endblock %}
+
+{#   <a class="btn btn-primary" href="{{ path('main_default_movieshow', {id:movie.id}) }}">{{ movie.title }}</a>
+#}

@@ -5,10 +5,12 @@
 {% include 'MainBundle::header.html.twig' %}
 
 {% for movie in result %}
-    <a href="{{ path('main_default_movieshow', {'id':movie.id}) }}">{{ movie.title }}</a><br>
-    {{ movie.description }}<hr>
 
-{% endfor %}
+    <div style = "float:left"><a href="{{ path('main_default_movieshow', {'id':movie.id}) }}">
+        <img src="https://img.youtube.com/vi/{{ movie.thumbnail }}/mqdefault.jpg"><br>
+            <h2>{{ movie.title }}</h2></a><br><hr></div>
+
+{% endfor %}<div style = "clear:both"></div><hr>
 
 
 

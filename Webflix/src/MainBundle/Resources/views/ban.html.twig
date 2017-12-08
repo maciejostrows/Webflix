@@ -3,6 +3,6 @@
 {% block body %}
 <h1>Twoje konto zostało zbanowane!!!<br>Skontaktuj się z Administratorem i przeproś w celu dalszego
 korzystania z serwisu.</h1><hr>
+    <a class="btn btn-primary" href="{{ path('fos_user_security_logout') }}">Powrót</a>
 {% endblock %}
 
-<a class="btn btn-primary" href="{{ path('fos_user_security_logout') }}">Powrót</a>
