@@ -1,8 +1,6 @@
+<div style="background-color: #e1f7d5"><center><h1 style="font-family: 'Monofett', cursive; font-size:80px">WEBFLIX</h1><hr></div>
 
-
-<center><h1 style="font-family: 'Monofett', cursive; font-size:80px">WEBFLIX</h1><hr>
-
-
+<div style="background-color: #c9c9ff"><center>
     <a class="btn btn-primary" href="{{ path('main_default_userpage') }}">Strona Główna</a> ||
     <a class="btn btn-primary" href="{{ path('main_default_allmovies') }}">Wszystkie filmy</a> ||
     <a class="btn btn-primary" href="{{ path('main_default_search') }}">Szukaj</a> ||
@@ -11,11 +9,17 @@
     Jesteś zalogowany jako: {{ app.user.username }}
     {% if is_granted('ROLE_ADMIN') %}
         <a  class="btn btn-danger" href="{{ path('main_default_adminpanel') }}">Panel Administratora</a>
-
+        {% else %}
+            <a  class="btn btn-danger" href="{{ path('main_default_adminexample') }}">Panel Administratora</a>
     {% endif %}
 
 
 
 
+
+
+
 </center>
-<hr>
+
+</div>
+    </div><br>

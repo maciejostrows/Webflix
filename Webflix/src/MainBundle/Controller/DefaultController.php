@@ -624,6 +624,14 @@ class DefaultController extends Controller
         return $this->render("MainBundle::adminDeleteBan.html.twig", ['referer'=>$referer]);
     }
 
+    /**
+     * @Route("/adminexample/")
+     */
+
+    public function adminExampleAction(){
+        return $this->render("MainBundle::adminExample.html.twig");
+    }
+
 
 }
 
